@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "790283340680",
+    "project_id": "temporary-vault",
+    "storage_bucket": "temporary-vault.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:790283340680:android:d9b96eb258a3d1dbd8883d",
+        "android_client_info": {
+          "package_name": "com.example.temporary_vault"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCH388hYzamvm3L4fRTTJvzAX69yQCl3ww"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
