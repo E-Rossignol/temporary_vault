@@ -41,6 +41,8 @@ dependencies:
   encrypt: ^5.0.1
   pointycastle: ^3.6.1
   crypto: ^3.0.0
+  cloud_firestore: ^6.1.0
+
 
 dev_dependencies:
   flutter_test:
