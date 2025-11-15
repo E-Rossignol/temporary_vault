@@ -28,6 +28,31 @@ class DatabaseHelper {
     }
   }
 
+  // Nouvelle méthode : insère une List<dynamic> dans la collection "user_data".
+  // Chaque élément de la liste devient une clé 'field_0', 'field_1', ...
+  // Optionnel : préciser l'email de l'utilisateur via le paramètre 'mail'.
+  // Retourne l'id du document créé, ou null si erreur.
+  Future<String?> insertUserDataFromList(List<dynamic> values, {String? mail}) async {
+    try {
+      final Map<String, dynamic> data = {};
+      for (var i = 0; i < values.length; i++) {
+        data['field_$i'] = values[i];
+      }
+      if (mail != null) data['mail'] = mail;
+      data['createdAt'] = FieldValue.serverTimestamp();
+      final docRef = await userDataCollection.add(data);
+      return docRef.id;
+    } catch (e) {
+      print('DatabaseHelper.insertUserDataFromList error: $e');
+      return null;
+    }
+  }
+
+  Future<bool> hasVault(String mail) async{
+    final data = await getCurrentUserData(mail);
+    return data.isNotEmpty;
+  }
+
   Future<bool> isDeadlinePassed(String mail) async{
     final data = await getCurrentUserData(mail);
     DateTime deadline = fromIntToDateTime(int.parse(data[3].split(': ')[1]));
