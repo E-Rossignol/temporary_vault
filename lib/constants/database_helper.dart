@@ -34,13 +34,14 @@ class DatabaseHelper {
   // Chaque élément de la liste devient une clé 'field_0', 'field_1', ...
   // Optionnel : préciser l'email de l'utilisateur via le paramètre 'mail'.
   // Retourne l'id du document créé, ou null si erreur.
-  Future<String?> insertUserDataFromList(Data dt, String pwd) async {
+  Future<String?> createVault(Data dt, String pwd) async {
     try {
       final Map<String, dynamic> data = {};
       data['deadline'] = dt.deadline.millisecondsSinceEpoch;
       String encryptedMessage = Helper.encryptMessage(dt.message, pwd);
       data['message'] = encryptedMessage;
       data['user'] = dt.mail;
+      data['locked'] = true;
       final docRef = await userDataCollection.add(data);
       return docRef.id;
     } catch (e) {

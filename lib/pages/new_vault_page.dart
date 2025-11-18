@@ -108,22 +108,27 @@ class _NewVaultPageState extends State<NewVaultPage> {
     final deadline = _computeDeadline();
     if (message.isEmpty || password.isEmpty || deadline == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Veuillez remplir toutes les informations requises')),
+        const SnackBar(content: Text('Veuillez remplir toutes les informations requises'), backgroundColor: Color(0xFFB8860B),
+          duration: Duration(seconds: 1),),
       );
       return;
     }
-
     setState(() => _isLoading = true);
     final email = FirebaseAuth.instance.currentUser?.email;
     Data dt = Data(mail: email ?? '', message: message, deadline: deadline,);
-    DateTime now = DateTime.now();
-    final id = await DatabaseHelper.instance.insertUserDataFromList(dt, _passwordController.text);
+    final id = await DatabaseHelper.instance.createVault(dt, _passwordController.text);
     setState(() {
       _isLoading = false;
       _created = id != null;
       _createdId = id;
-      if (_created) _step = 4;
     });
+    Navigator.pushReplacementNamed(context, '/home');
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Center(
+        child: Text('Coffre fort créé'),
+      ), backgroundColor: Color(0xFFB8860B),
+        duration: Duration(seconds: 1),),
+    );
   }
 
   Widget _stepContent() {
@@ -149,7 +154,8 @@ class _NewVaultPageState extends State<NewVaultPage> {
                     onPressed: () {
                       if (_messageController.text.trim().isEmpty) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Le message ne peut pas être vide')),
+                              const SnackBar(content: Text('Le message ne peut pas être vide'), backgroundColor: Color(0xFFB8860B),
+                                duration: Duration(seconds: 1),),
                             );
                             return;
                       }
@@ -340,23 +346,6 @@ class _NewVaultPageState extends State<NewVaultPage> {
               onPressed: _prevStep,
               icon: const Icon(Icons.arrow_back),
               label: const Text('Retour'),
-            ),
-          ],
-        );
-      case 4: // success
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(Icons.check_circle_outline, size: 80, color: AppTheme.darkGold),
-            const SizedBox(height: 12),
-            const Text('Félicitations, coffre-fort créé !', style: TextStyle(fontSize: 18)),
-            const SizedBox(height: 8),
-            if (_createdId != null)
-              SelectableText('ID: $_createdId', style: const TextStyle(fontSize: 12, color: Colors.white70)),
-            const SizedBox(height: 12),
-            ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Retour'),
             ),
           ],
         );

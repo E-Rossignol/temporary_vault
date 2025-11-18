@@ -38,7 +38,8 @@ class _SignUpPageState extends State<SignUpPage> {
       );
     } on FirebaseAuthException catch (e) {
       final msg = e.message ?? 'Erreur lors de l\'inscription';
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg), backgroundColor: Color(0xFFB8860B),
+        duration: Duration(seconds: 1)));
     } finally {
       if (mounted) setState(() => _loading = false);
     }
