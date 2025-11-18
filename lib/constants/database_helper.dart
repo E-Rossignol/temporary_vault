@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:temporary_vault/constants/helper.dart';
+import 'package:temporary_vault/models/data.dart';
 
 class DatabaseHelper {
   DatabaseHelper._();
@@ -13,7 +15,7 @@ class DatabaseHelper {
 
   Future<List<String>> getCurrentUserData(String mail) async {
     try {
-      final querySnapshot = await userDataCollection.where('mail', isEqualTo: mail).get();
+      final querySnapshot = await userDataCollection.where('user', isEqualTo: mail).get();
       return querySnapshot.docs.map((doc) {
         final data = doc.data();
         final keys = data.keys.toList()..sort();
@@ -32,19 +34,35 @@ class DatabaseHelper {
   // Chaque élément de la liste devient une clé 'field_0', 'field_1', ...
   // Optionnel : préciser l'email de l'utilisateur via le paramètre 'mail'.
   // Retourne l'id du document créé, ou null si erreur.
-  Future<String?> insertUserDataFromList(List<dynamic> values, {String? mail}) async {
+  Future<String?> insertUserDataFromList(Data dt, String pwd) async {
     try {
       final Map<String, dynamic> data = {};
-      for (var i = 0; i < values.length; i++) {
-        data['field_$i'] = values[i];
-      }
-      if (mail != null) data['mail'] = mail;
-      data['createdAt'] = FieldValue.serverTimestamp();
+      data['deadline'] = dt.deadline.millisecondsSinceEpoch;
+      String encryptedMessage = Helper.encryptMessage(dt.message, pwd);
+      data['message'] = encryptedMessage;
+      data['user'] = dt.mail;
       final docRef = await userDataCollection.add(data);
       return docRef.id;
     } catch (e) {
       print('DatabaseHelper.insertUserDataFromList error: $e');
       return null;
+    }
+  }
+
+  Future<Data> getUserDataByMail(String mail, String pwd) async {
+    try {
+      final querySnapshot = await userDataCollection.where('user', isEqualTo: mail).get();
+      if (querySnapshot.docs.isEmpty) {
+        return Data(mail: mail, deadline: DateTime.now(), message: '');
+      }
+      final doc = querySnapshot.docs.first;
+      final data = doc.data();
+      DateTime deadline = fromIntToDateTime(data['deadline']);
+      String decryptedMessage = Helper.decryptMessage(data['message'], pwd);
+      return Data(mail: mail, deadline: deadline, message: decryptedMessage);
+    } catch (e) {
+      print('DatabaseHelper.getUserDataByMail error: $e');
+      return Data(mail: mail, deadline: DateTime.now(), message: '');
     }
   }
 
@@ -55,7 +73,7 @@ class DatabaseHelper {
 
   Future<bool> isDeadlinePassed(String mail) async{
     final data = await getCurrentUserData(mail);
-    DateTime deadline = fromIntToDateTime(int.parse(data[3].split(': ')[1]));
+    DateTime deadline = fromIntToDateTime(int.parse(data[2].split(': ')[1]));
     DateTime now = DateTime.now();
     return now.isAfter(deadline);
   }

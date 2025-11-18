@@ -42,6 +42,7 @@ dependencies:
   pointycastle: ^3.6.1
   crypto: ^3.0.0
   cloud_firestore: ^6.1.0
+  intl: ^0.18.0
 
 
 dev_dependencies:

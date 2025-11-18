@@ -1,15 +1,11 @@
-import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'pages/sign_in.dart';
 import 'pages/sign_up.dart';
 import 'pages/home_page.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'constants/database_helper.dart';
 import 'constants/theme.dart';
+import 'pages/new_vault_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,6 +32,7 @@ class MyApp extends StatelessWidget {
         '/signin': (context) => const SignInPage(),
         '/signup': (context) => const SignUpPage(),
         '/home': (context) => const HomePage(),
+        '/new_vault' : (context) => const NewVaultPage(), // à remplacer par NewVaultPage()
       },
     );
   }

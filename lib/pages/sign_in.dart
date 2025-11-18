@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../constants/database_helper.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -13,6 +14,11 @@ class _SignInPageState extends State<SignInPage> {
   final _emailCtrl = TextEditingController();
   final _passCtrl = TextEditingController();
   bool _loading = false;
+
+  void _autoLogin() {
+    _emailCtrl.text = 'erwan@hotmail.ch';
+    _passCtrl.text = 'erwanerwan';
+  }
 
   Future<void> _signIn() async {
     if (!_formKey.currentState!.validate()) return;
@@ -29,6 +35,12 @@ class _SignInPageState extends State<SignInPage> {
       await prefs.setString('uid', uid);
       await prefs.setString('email', email);
       if (!mounted) return;
+      DatabaseHelper db = DatabaseHelper.instance;
+      bool hasVault = await db.hasVault(email);
+      if (!hasVault) {
+        Navigator.pushReplacementNamed(context, '/new_vault');
+        return;
+      }
       Navigator.pushReplacementNamed(context, '/home');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Center(
@@ -127,6 +139,13 @@ class _SignInPageState extends State<SignInPage> {
                                   child: const Text('Se connecter'),
                                 ),
                               ),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: _autoLogin,
+                            child: const Text('Auto Login'),
+                          ),
+                        ),
                         const SizedBox(height: 8),
                         TextButton(
                           onPressed: () => Navigator.pushNamed(context, '/signup'),
