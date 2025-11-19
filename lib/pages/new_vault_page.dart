@@ -115,7 +115,7 @@ class _NewVaultPageState extends State<NewVaultPage> {
     }
     setState(() => _isLoading = true);
     final email = FirebaseAuth.instance.currentUser?.email;
-    Data dt = Data(mail: email ?? '', message: message, deadline: deadline,);
+    Data dt = Data(mail: email ?? '', message: message, deadline: deadline, locked: true);
     final id = await DatabaseHelper.instance.createVault(dt, _passwordController.text);
     setState(() {
       _isLoading = false;

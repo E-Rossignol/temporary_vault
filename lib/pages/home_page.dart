@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../constants/database_helper.dart';
+import 'package:temporary_vault/constants/database_helper.dart';
+import 'package:temporary_vault/pages/locked_vault_page.dart';
+import 'package:temporary_vault/pages/password_missing_vault_page.dart';
+import 'package:temporary_vault/pages/unlocked_vault_page.dart';
 import '../constants/theme.dart';
+import '../models/data.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,7 +16,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<String> _userData = [];
+  int userState = 0; // STATES: 0 = locked, 1 = ready to be unlocked, 2 = unlocked
+  Data dt = Data(mail: "", deadline: DateTime.now(), message: '', locked: false);
+
+  // stocker le Future d'initialisation pour éviter de le recréer à chaque build
+  late Future<void> _initFuture;
 
   Future<void> _signOut(BuildContext context) async {
     try {
@@ -37,11 +45,33 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void _getUserData() async {
-    final db = DatabaseHelper.instance;
-    final email = FirebaseAuth.instance.currentUser?.email ?? '';
-    _userData = await db.getCurrentUserData(email);
-    if (mounted) setState(() {}); // rafraîchir l'UI après chargement
+  @override
+  void initState() {
+    super.initState();
+    // initialiser une seule fois et réutiliser ce Future dans le FutureBuilder
+    _initFuture = initUserState();
+  }
+
+  Future<void> initUserState() async {
+    dt = await DatabaseHelper.instance.getCurrentUserData(FirebaseAuth.instance.currentUser?.email ?? '');
+    setState(() {
+      if (dt.deadline.isAfter(DateTime.now()) && dt.locked) {
+        userState = 0; // locked
+      } else if (dt.deadline.isBefore(DateTime.now()) && dt.locked) {
+        userState = 1; // ready to unlock
+      } else if (dt.deadline.isBefore(DateTime.now()) && !dt.locked) {
+        userState = 2; // unlocked
+      }
+    });
+  }
+
+  Widget screen() {
+    switch (userState){
+      case 0: return LockedVaultPage(data: dt);
+      case 1: return PasswordMissingVaultPage(data: dt);
+      case 2: return UnlockedVaultPage(data: dt);
+      default: return const Center(child: Text('Unknown state'));
+    }
   }
 
   @override
@@ -57,52 +87,14 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            const Text('Bienvenue dans la Temporary Vault !', style: TextStyle(fontSize: 20)),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton.icon(
-                    icon: const Icon(Icons.download),
-                    label: const Text('Charger données'),
-                    onPressed: _getUserData,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: _userData.isEmpty
-                  ? Center(child: Text('Aucune donnée chargée', style: TextStyle(color: Colors.white.withOpacity(0.7))))
-                  : ListView.separated(
-                      itemCount: _userData.length,
-                      separatorBuilder: (_, _) => const Divider(color: Colors.white12),
-                      itemBuilder: (context, index) {
-                        final item = _userData[index];
-                        // format attendu : "docId • key1: value1 • key2: value2"
-                        final parts = item.split(' • ');
-                        final id = parts.isNotEmpty ? parts[0] : 'sans id';
-                        final values = parts.length > 1 ? parts.sublist(1).join(' • ') : '';
-                        return ListTile(
-                          title: Text(id, style: const TextStyle(color: Colors.white)),
-                          subtitle: Text(
-                            values,
-                            style: TextStyle(color: Colors.white.withOpacity(0.75)),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          dense: true,
-                        );
-                      },
-                    ),
-            ),
-          ],
-        ),
-      ),
+      // utiliser le Future stocké pour éviter la recréation à chaque build
+      body: FutureBuilder<void>(future: _initFuture, builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else {
+          return screen();
+        }
+      }),
     );
   }
 }
