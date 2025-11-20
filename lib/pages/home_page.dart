@@ -3,7 +3,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:temporary_vault/constants/database_helper.dart';
 import 'package:temporary_vault/pages/locked_vault_page.dart';
+import 'package:temporary_vault/pages/new_vault_page.dart';
 import 'package:temporary_vault/pages/password_missing_vault_page.dart';
+import 'package:temporary_vault/pages/sign_in.dart';
 import 'package:temporary_vault/pages/unlocked_vault_page.dart';
 import '../constants/theme.dart';
 import '../models/data.dart';
@@ -54,7 +56,12 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> initUserState() async {
     dt = await DatabaseHelper.instance.getCurrentUserData(FirebaseAuth.instance.currentUser?.email ?? '');
+    bool hasVault = await DatabaseHelper.instance.hasVault(FirebaseAuth.instance.currentUser?.email ?? '');
     setState(() {
+      if (!hasVault) {
+        userState = -1; // pas de vault, considéré comme déverrouillé
+        return;
+      }
       if (dt.deadline.isAfter(DateTime.now()) && dt.locked) {
         userState = 0; // locked
       } else if (dt.deadline.isBefore(DateTime.now()) && dt.locked) {
@@ -67,6 +74,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget screen() {
     switch (userState){
+      case -1: return NewVaultPage();
       case 0: return LockedVaultPage(data: dt);
       case 1: return PasswordMissingVaultPage(data: dt);
       case 2: return UnlockedVaultPage(data: dt);

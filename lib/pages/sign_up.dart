@@ -26,10 +26,11 @@ class _SignUpPageState extends State<SignUpPage> {
       final prefs = await SharedPreferences.getInstance();
       final uid = cred.user?.uid ?? '';
       final email = cred.user?.email ?? _emailCtrl.text.trim();
+      await prefs.remove('clear_message');
       await prefs.setString('uid', uid);
       await prefs.setString('email', email);
       if (!mounted) return;
-      Navigator.pushReplacementNamed(context, '/home');
+      Navigator.pushReplacementNamed(context, '/new_vault');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Center(
           child: Text('Connecté'),

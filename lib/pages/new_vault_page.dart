@@ -338,8 +338,24 @@ class _NewVaultPageState extends State<NewVaultPage> {
             _isLoading
                 ? const CircularProgressIndicator()
                 : ElevatedButton(
-                    onPressed: _createVault,
-                    child: const Text('Créer le coffre'),
+                    onPressed: () async {
+                      showDialog<bool>(
+                        context: context,
+                        barrierDismissible: true,
+                        builder: (ctx) => AlertDialog(
+                          title: Text("Confirmation"),
+                          content: Text("Si vous oubliez votre mot de passe et tentez de déverrouiller le coffre, le message affiché sera erroné et le message originel définitevement perdu. Êtes-vous sûr de vouloir continuer ?"),
+                          actions: [
+                            TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: Text("Retour")),
+                            ElevatedButton(onPressed: (){
+                              Navigator.of(ctx).pop(true);
+                              _createVault();
+                      }, child: Text("Confirmer")),
+                          ],
+                        ),
+                      );
+                    },
+    child: const Text('Créer le coffre'),
                   ),
             const SizedBox(height: 8),
             TextButton.icon(

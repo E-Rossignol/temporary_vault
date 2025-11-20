@@ -30,6 +30,29 @@ class MyApp extends StatelessWidget {
       title: 'Security — Temporary Vault',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.themeData(), // thème centralisé
+      // builder global : on place l'image d'arrière-plan derrière le "child" de l'app
+      builder: (context, child) {
+        return Stack(
+          children: [
+            // image de fond couvrant tout l'écran
+            Positioned.fill(
+              child: Image.asset(
+                // --> utiliser le chemin tel que déclaré dans pubspec.yaml (ex: images/background.jpg)
+                'lib/constants/images/background.jpg',
+                fit: BoxFit.cover,
+              ),
+            ),
+            // contenu de l'application : s'assurer que le child n'ajoute pas une couleur de fond opaque
+            if (child != null)
+              Positioned.fill(
+                child: Container(
+                  color: Colors.transparent,
+                  child: child,
+                ),
+              ),
+          ],
+        );
+      },
       initialRoute: isLogged ? '/home' : '/signin',
       routes: {
         '/signin': (context) => const SignInPage(),
@@ -43,4 +66,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

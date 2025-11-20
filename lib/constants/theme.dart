@@ -8,7 +8,10 @@ class AppTheme {
   static ThemeData themeData() {
     final base = ThemeData.dark();
     return base.copyWith(
-      scaffoldBackgroundColor: darkBackground,
+      // rendre le scaffold transparent afin que l'image de fond soit visible
+      scaffoldBackgroundColor: Colors.transparent,
+      // s'assurer que les surfaces par défaut n'obstruent pas l'arrière-plan
+      canvasColor: Colors.transparent,
       textTheme: GoogleFonts.montserratTextTheme(base.textTheme).apply(
         bodyColor: Colors.white,
         displayColor: Colors.white,
@@ -18,8 +21,9 @@ class AppTheme {
         secondary: darkGold.withOpacity(0.9),
         background: darkBackground,
       ),
-      appBarTheme: const AppBarTheme(
-        backgroundColor: Color(0xFF0B0B0D),
+      appBarTheme: AppBarTheme(
+        // appbar semi-transparent pour conserver lisibilité sans masquer totalement le fond
+        backgroundColor: Colors.black.withOpacity(0.35),
         elevation: 2,
         centerTitle: true,
       ),
@@ -43,4 +47,3 @@ class AppTheme {
     );
   }
 }
-
