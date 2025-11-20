@@ -5,7 +5,6 @@ import 'package:temporary_vault/constants/database_helper.dart';
 import 'package:temporary_vault/pages/locked_vault_page.dart';
 import 'package:temporary_vault/pages/new_vault_page.dart';
 import 'package:temporary_vault/pages/password_missing_vault_page.dart';
-import 'package:temporary_vault/pages/sign_in.dart';
 import 'package:temporary_vault/pages/unlocked_vault_page.dart';
 import '../constants/theme.dart';
 import '../models/data.dart';

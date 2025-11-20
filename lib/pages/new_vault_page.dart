@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:temporary_vault/models/data.dart';
 import '../constants/database_helper.dart';
-import '../constants/theme.dart';
 
 class NewVaultPage extends StatefulWidget {
   const NewVaultPage({super.key});
@@ -33,8 +32,6 @@ class _NewVaultPageState extends State<NewVaultPage> {
 
   // State
   bool _isLoading = false;
-  bool _created = false;
-  String? _createdId;
 
   @override
   void dispose() {
@@ -116,11 +113,9 @@ class _NewVaultPageState extends State<NewVaultPage> {
     setState(() => _isLoading = true);
     final email = FirebaseAuth.instance.currentUser?.email;
     Data dt = Data(mail: email ?? '', message: message, deadline: deadline, locked: true);
-    final id = await DatabaseHelper.instance.createVault(dt, _passwordController.text);
+    await DatabaseHelper.instance.createVault(dt, _passwordController.text);
     setState(() {
       _isLoading = false;
-      _created = id != null;
-      _createdId = id;
     });
     Navigator.pushReplacementNamed(context, '/home');
     ScaffoldMessenger.of(context).showSnackBar(

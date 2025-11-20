@@ -4,7 +4,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:temporary_vault/constants/database_helper.dart';
 import 'package:temporary_vault/constants/helper.dart';
 import 'package:temporary_vault/pages/home_page.dart';
-import 'package:temporary_vault/pages/unlocked_vault_page.dart';
 import '../models/data.dart';
 import '../constants/theme.dart';
 

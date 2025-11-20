@@ -32,7 +32,6 @@ class DatabaseHelper {
     } catch (e) {
       // log et renvoie une liste vide en cas d'erreur
       // print/debugging léger pour aide au dev
-      print('DatabaseHelper.getCurrentUserData error: $e');
       return Data(mail: "", deadline: DateTime.now(), message: '', locked: false);
     }
   }
@@ -52,7 +51,6 @@ class DatabaseHelper {
       final docRef = await userDataCollection.add(data);
       return docRef.id;
     } catch (e) {
-      print('DatabaseHelper.insertUserDataFromList error: $e');
       return null;
     }
   }

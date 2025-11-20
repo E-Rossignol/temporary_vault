@@ -1,7 +1,5 @@
 import 'dart:async';
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:temporary_vault/pages/password_missing_vault_page.dart';
@@ -122,7 +120,6 @@ class _LockedVaultPageState extends State<LockedVaultPage> with SingleTickerProv
       return const Center(child: CircularProgressIndicator());
     }
 
-    final deadlineStr = DateFormat.yMMMd().add_jm().format(_data!.deadline);
     final remainingStr = _remaining == Duration.zero ? 'Échéance atteinte' : _formatDuration(_remaining);
 
     return Center(

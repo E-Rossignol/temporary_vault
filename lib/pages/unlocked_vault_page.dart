@@ -3,9 +3,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:temporary_vault/models/data.dart';
 
 class UnlockedVaultPage extends StatefulWidget {
-  UnlockedVaultPage({super.key, this.data, this.message});
-  Data? data;
-  String? message;
+  const UnlockedVaultPage({super.key, this.data, this.message});
+  final Data? data;
+  final String? message;
   @override
   State<UnlockedVaultPage> createState() => _UnlockedVaultPageState();
 }
