@@ -16,8 +16,8 @@ class _SignInPageState extends State<SignInPage> {
   bool _loading = false;
 
   void _autoLogin() {
-    _emailCtrl.text = 'erwan@hotmail.ch';
-    _passCtrl.text = 'erwanerwan';
+    _emailCtrl.text = 'admiiiin@admin.ch';
+    _passCtrl.text = 'mypassword123';
   }
 
   Future<void> _signIn() async {

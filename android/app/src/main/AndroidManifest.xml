@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="temporary_vault"
+        android:label="Temp Vault"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/vault_icon">
         <activity
             android:name=".MainActivity"
             android:exported="true"

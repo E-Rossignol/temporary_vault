@@ -30,7 +30,7 @@ class _SignUpPageState extends State<SignUpPage> {
       await prefs.setString('uid', uid);
       await prefs.setString('email', email);
       if (!mounted) return;
-      Navigator.pushReplacementNamed(context, '/new_vault');
+      Navigator.pushReplacementNamed(context, '/home');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Center(
           child: Text('Connecté'),

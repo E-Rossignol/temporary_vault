@@ -44,7 +44,7 @@ class DatabaseHelper {
     try {
       final Map<String, dynamic> data = {};
       data['deadline'] = dt.deadline.millisecondsSinceEpoch;
-      String encryptedMessage = Helper.encryptMessage(dt.message, pwd);
+      String encryptedMessage = Helper.globalEncryption(dt.message, dt.mail, pwd);
       data['message'] = encryptedMessage;
       data['user'] = dt.mail;
       data['locked'] = true;

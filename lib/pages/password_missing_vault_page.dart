@@ -26,13 +26,18 @@ class _PasswordMissingVaultPageState extends State<PasswordMissingVaultPage> {
     super.dispose();
   }
 
-  // méthode decrypt demandée (pour l'instant ne fait rien)
-  Future<void> decrypt(String password) async {
+  Future<bool> decrypt(String password) async {
     final dt = await DatabaseHelper.instance.getCurrentUserData(FirebaseAuth.instance.currentUser?.email ?? '');
-    // no-op : implémentation de décryptage à venir
-    final clearMessage = Helper.decryptMessage(dt.message, password);
+    final clearMessage = Helper.globalDecryption(dt.message, dt.mail , password);
+    if (clearMessage == null){
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Mot de passe incorrect'), backgroundColor: AppTheme.darkGold),
+      );
+      return false;
+    }
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('clear_message', clearMessage);
+    return true;
   }
 
   Future<void> _validatePassword() async {
@@ -41,14 +46,20 @@ class _PasswordMissingVaultPageState extends State<PasswordMissingVaultPage> {
     setState(() => _isLoading = true);
 
     try {
-      decrypt(pwd); // actuellement ne fait rien
-      if (!mounted) return;
-      await DatabaseHelper.instance.unlockUser(FirebaseAuth.instance.currentUser?.email ?? '');
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (_) => HomePage(),
-        ),
-      );
+      String? userName = FirebaseAuth.instance.currentUser?.email;
+      if (userName != null) {
+        bool isPwdGood = await decrypt(pwd);
+        if (!mounted) return;
+        if (isPwdGood){
+          await DatabaseHelper.instance.unlockUser(
+              FirebaseAuth.instance.currentUser?.email ?? '');
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (_) => HomePage(),
+              )
+          );
+        }
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }

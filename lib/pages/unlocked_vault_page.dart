@@ -3,9 +3,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:temporary_vault/models/data.dart';
 
 class UnlockedVaultPage extends StatefulWidget {
-  const UnlockedVaultPage({super.key, this.data, this.message});
+  const UnlockedVaultPage({super.key, this.data});
   final Data? data;
-  final String? message;
   @override
   State<UnlockedVaultPage> createState() => _UnlockedVaultPageState();
 }
@@ -15,22 +14,23 @@ class _UnlockedVaultPageState extends State<UnlockedVaultPage> {
   String message = "";
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     initMessage();
   }
 
   Future<void> initMessage() async {
-    if (widget.message != null && widget.message!.isNotEmpty) {
-      setState(() {
-        message = widget.message!;
-      });
-    } else {
       final prefs = await SharedPreferences.getInstance();
       setState(() {
         message = prefs.getString('clear_message') ?? '';
       });
-    }
+      if (message == ''){
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Center(
+            child: Text('ERREUR'),
+          ), backgroundColor: Colors.redAccent,
+            duration: Duration(seconds: 2),),
+        );
+      }
   }
   @override
   Widget build(BuildContext context) {
