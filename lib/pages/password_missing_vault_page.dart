@@ -12,7 +12,8 @@ class PasswordMissingVaultPage extends StatefulWidget {
   const PasswordMissingVaultPage({super.key, this.data});
 
   @override
-  State<PasswordMissingVaultPage> createState() => _PasswordMissingVaultPageState();
+  State<PasswordMissingVaultPage> createState() =>
+      _PasswordMissingVaultPageState();
 }
 
 class _PasswordMissingVaultPageState extends State<PasswordMissingVaultPage> {
@@ -27,11 +28,16 @@ class _PasswordMissingVaultPageState extends State<PasswordMissingVaultPage> {
   }
 
   Future<bool> decrypt(String password) async {
-    final dt = await DatabaseHelper.instance.getCurrentUserData(FirebaseAuth.instance.currentUser?.email ?? '');
-    final clearMessage = Helper.globalDecryption(dt.message, dt.mail , password);
-    if (clearMessage == null){
+    final dt = await DatabaseHelper.instance.getCurrentUserData(
+      FirebaseAuth.instance.currentUser?.email ?? '',
+    );
+    final clearMessage = Helper.globalDecryption(dt.message, dt.mail, password);
+    if (clearMessage == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Mot de passe incorrect'), backgroundColor: AppTheme.darkGold),
+        const SnackBar(
+          content: Text('Mot de passe incorrect'),
+          backgroundColor: AppTheme.darkGold,
+        ),
       );
       return false;
     }
@@ -50,14 +56,13 @@ class _PasswordMissingVaultPageState extends State<PasswordMissingVaultPage> {
       if (userName != null) {
         bool isPwdGood = await decrypt(pwd);
         if (!mounted) return;
-        if (isPwdGood){
+        if (isPwdGood) {
           await DatabaseHelper.instance.unlockUser(
-              FirebaseAuth.instance.currentUser?.email ?? '');
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (_) => HomePage(),
-              )
+            FirebaseAuth.instance.currentUser?.email ?? '',
           );
+          Navigator.of(
+            context,
+          ).pushReplacement(MaterialPageRoute(builder: (_) => HomePage()));
         }
       }
     } finally {
@@ -72,7 +77,9 @@ class _PasswordMissingVaultPageState extends State<PasswordMissingVaultPage> {
         constraints: const BoxConstraints(maxWidth: 720),
         child: Card(
           color: const Color(0xFF0F0F12),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           elevation: 6,
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -81,11 +88,16 @@ class _PasswordMissingVaultPageState extends State<PasswordMissingVaultPage> {
               children: [
                 Icon(Icons.lock_open, size: 48, color: AppTheme.darkGold),
                 const SizedBox(height: 12),
-                Text('Entrez le mot de passe', style: Theme.of(context).textTheme.titleLarge),
+                Text(
+                  'Entrez le mot de passe',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
                 const SizedBox(height: 8),
                 Text(
                   'Saisissez le mot de passe pour déverrouiller ce coffre‑fort.',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white70),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(color: Colors.white70),
                 ),
                 const SizedBox(height: 12),
                 TextField(
@@ -94,7 +106,9 @@ class _PasswordMissingVaultPageState extends State<PasswordMissingVaultPage> {
                   decoration: InputDecoration(
                     hintText: 'Mot de passe',
                     suffixIcon: IconButton(
-                      icon: Icon(_obscure ? Icons.visibility : Icons.visibility_off),
+                      icon: Icon(
+                        _obscure ? Icons.visibility : Icons.visibility_off,
+                      ),
                       onPressed: () => setState(() => _obscure = !_obscure),
                     ),
                   ),
@@ -107,7 +121,9 @@ class _PasswordMissingVaultPageState extends State<PasswordMissingVaultPage> {
                         children: [
                           Expanded(
                             child: ElevatedButton(
-                              onPressed: _pwdController.text.isEmpty ? null : _validatePassword,
+                              onPressed: _pwdController.text.isEmpty
+                                  ? null
+                                  : _validatePassword,
                               child: const Text('Valider'),
                             ),
                           ),

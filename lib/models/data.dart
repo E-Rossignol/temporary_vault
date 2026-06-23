@@ -8,6 +8,6 @@ class Data {
     required this.mail,
     required this.deadline,
     required this.message,
-    required this.locked
+    required this.locked,
   });
 }

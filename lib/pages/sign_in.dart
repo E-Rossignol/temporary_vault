@@ -43,16 +43,21 @@ class _SignInPageState extends State<SignInPage> {
       }
       Navigator.pushReplacementNamed(context, '/home');
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Center(
-          child: Text('Connecté'),
+        const SnackBar(
+          content: Center(child: Text('Connecté')),
+          duration: Duration(seconds: 1),
+          backgroundColor: Color(0xFFB8860B),
         ),
-            duration: Duration(seconds: 1),
-            backgroundColor: Color(0xFFB8860B)),
       );
     } on FirebaseAuthException catch (e) {
       final msg = e.message ?? 'Erreur lors de la connexion';
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg), backgroundColor: Color(0xFFB8860B),
-        duration: Duration(seconds: 1),));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(msg),
+          backgroundColor: Color(0xFFB8860B),
+          duration: Duration(seconds: 1),
+        ),
+      );
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -97,8 +102,16 @@ class _SignInPageState extends State<SignInPage> {
                     color: const Color(0xFF0E0E10),
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
-                      BoxShadow(color: Colors.black.withOpacity(0.6), blurRadius: 18, offset: const Offset(0, 8)),
-                      BoxShadow(color: darkGold.withOpacity(0.06), blurRadius: 0, spreadRadius: 1),
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.6),
+                        blurRadius: 18,
+                        offset: const Offset(0, 8),
+                      ),
+                      BoxShadow(
+                        color: darkGold.withOpacity(0.06),
+                        blurRadius: 0,
+                        spreadRadius: 1,
+                      ),
                     ],
                     border: Border.all(color: darkGold.withOpacity(0.08)),
                   ),
@@ -109,7 +122,10 @@ class _SignInPageState extends State<SignInPage> {
                         const SizedBox(height: 6),
                         Icon(Icons.lock_outline, size: 56, color: darkGold),
                         const SizedBox(height: 12),
-                        Text('Connexion', style: Theme.of(context).textTheme.titleLarge),
+                        Text(
+                          'Connexion',
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
                         const SizedBox(height: 18),
                         TextFormField(
                           controller: _emailCtrl,
@@ -118,7 +134,8 @@ class _SignInPageState extends State<SignInPage> {
                             prefixIcon: Icon(Icons.person_outline),
                           ),
                           keyboardType: TextInputType.emailAddress,
-                          validator: (v) => (v == null || v.isEmpty) ? 'Requis' : null,
+                          validator: (v) =>
+                              (v == null || v.isEmpty) ? 'Requis' : null,
                         ),
                         const SizedBox(height: 12),
                         TextFormField(
@@ -128,7 +145,9 @@ class _SignInPageState extends State<SignInPage> {
                             prefixIcon: Icon(Icons.vpn_key_outlined),
                           ),
                           obscureText: true,
-                          validator: (v) => (v == null || v.length < 6) ? 'Min 6 caractères' : null,
+                          validator: (v) => (v == null || v.length < 6)
+                              ? 'Min 6 caractères'
+                              : null,
                         ),
                         const SizedBox(height: 20),
                         _loading
@@ -149,13 +168,22 @@ class _SignInPageState extends State<SignInPage> {
                         ),
                         const SizedBox(height: 8),
                         TextButton(
-                          onPressed: () => Navigator.pushNamed(context, '/signup'),
-                          child: Text("Pas de compte ? S'inscrire", style: TextStyle(color: Colors.white.withOpacity(0.72))),
+                          onPressed: () =>
+                              Navigator.pushNamed(context, '/signup'),
+                          child: Text(
+                            "Pas de compte ? S'inscrire",
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.72),
+                            ),
+                          ),
                         ),
                         const SizedBox(height: 6),
                         Text(
                           'Security-first • Tous les accès sont chiffrés',
-                          style: TextStyle(color: Colors.white.withOpacity(0.45), fontSize: 12),
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.45),
+                            fontSize: 12,
+                          ),
                         ),
                       ],
                     ),

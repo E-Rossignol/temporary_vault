@@ -8,14 +8,16 @@ import '../constants/database_helper.dart';
 import '../constants/theme.dart';
 
 class LockedVaultPage extends StatefulWidget {
-  final Data? data; // facultatif : si null, la page chargera les données courantes
+  final Data?
+  data; // facultatif : si null, la page chargera les données courantes
   const LockedVaultPage({super.key, this.data});
 
   @override
   State<LockedVaultPage> createState() => _LockedVaultPageState();
 }
 
-class _LockedVaultPageState extends State<LockedVaultPage> with SingleTickerProviderStateMixin {
+class _LockedVaultPageState extends State<LockedVaultPage>
+    with SingleTickerProviderStateMixin {
   Data? _data;
   Timer? _timer;
   Duration _remaining = Duration.zero;
@@ -29,13 +31,19 @@ class _LockedVaultPageState extends State<LockedVaultPage> with SingleTickerProv
   void initState() {
     super.initState();
     // initialisation de l'animation
-    _shakeController = AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
-    _shakeAnim = TweenSequence<double>([
-      TweenSequenceItem(tween: Tween(begin: 0.0, end: -0.15), weight: 4),
-      TweenSequenceItem(tween: Tween(begin: -0.15, end: 0.15), weight: 8),
-      TweenSequenceItem(tween: Tween(begin: 0.15, end: -0.08), weight: 8),
-      TweenSequenceItem(tween: Tween(begin: -0.08, end: 0.0), weight: 4),
-    ]).animate(CurvedAnimation(parent: _shakeController, curve: Curves.easeInOut));
+    _shakeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+    _shakeAnim =
+        TweenSequence<double>([
+          TweenSequenceItem(tween: Tween(begin: 0.0, end: -0.15), weight: 4),
+          TweenSequenceItem(tween: Tween(begin: -0.15, end: 0.15), weight: 8),
+          TweenSequenceItem(tween: Tween(begin: 0.15, end: -0.08), weight: 8),
+          TweenSequenceItem(tween: Tween(begin: -0.08, end: 0.0), weight: 4),
+        ]).animate(
+          CurvedAnimation(parent: _shakeController, curve: Curves.easeInOut),
+        );
 
     // timer périodique qui déclenche l'animation toutes les 10 secondes
     _shakeTimer = Timer.periodic(const Duration(seconds: 3), (_) {
@@ -120,14 +128,18 @@ class _LockedVaultPageState extends State<LockedVaultPage> with SingleTickerProv
       return const Center(child: CircularProgressIndicator());
     }
 
-    final remainingStr = _remaining == Duration.zero ? 'Échéance atteinte' : _formatDuration(_remaining);
+    final remainingStr = _remaining == Duration.zero
+        ? 'Échéance atteinte'
+        : _formatDuration(_remaining);
 
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 720),
         child: Card(
           color: const Color(0xFF0F0F12),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           elevation: 6,
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 18),
@@ -153,9 +165,9 @@ class _LockedVaultPageState extends State<LockedVaultPage> with SingleTickerProv
                     remainingStr,
                     key: ValueKey(remainingStr),
                     style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                          color: AppTheme.darkGold,
-                          fontWeight: FontWeight.w700,
-                        ),
+                      color: AppTheme.darkGold,
+                      fontWeight: FontWeight.w700,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 ),

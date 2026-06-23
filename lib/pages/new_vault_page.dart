@@ -21,7 +21,9 @@ class _NewVaultPageState extends State<NewVaultPage> {
   bool _usePreciseDate = true;
   DateTime? _pickedDate;
   TimeOfDay? _pickedTime;
-  final TextEditingController _relativeValueController = TextEditingController(text: '1');
+  final TextEditingController _relativeValueController = TextEditingController(
+    text: '1',
+  );
   String _relativeUnit = 'Heures';
   final List<String> _units = ['Heures', 'Jours', 'Mois', 'Années'];
 
@@ -105,24 +107,33 @@ class _NewVaultPageState extends State<NewVaultPage> {
     final deadline = _computeDeadline();
     if (message.isEmpty || password.isEmpty || deadline == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Veuillez remplir toutes les informations requises'), backgroundColor: Color(0xFFB8860B),
-          duration: Duration(seconds: 1),),
+        const SnackBar(
+          content: Text('Veuillez remplir toutes les informations requises'),
+          backgroundColor: Color(0xFFB8860B),
+          duration: Duration(seconds: 1),
+        ),
       );
       return;
     }
     setState(() => _isLoading = true);
     final email = FirebaseAuth.instance.currentUser?.email;
-    Data dt = Data(mail: email ?? '', message: message, deadline: deadline, locked: true);
+    Data dt = Data(
+      mail: email ?? '',
+      message: message,
+      deadline: deadline,
+      locked: true,
+    );
     await DatabaseHelper.instance.createVault(dt, _passwordController.text);
     setState(() {
       _isLoading = false;
     });
     Navigator.pushReplacementNamed(context, '/home');
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Center(
-        child: Text('Coffre fort créé'),
-      ), backgroundColor: Color(0xFFB8860B),
-        duration: Duration(seconds: 1),),
+      const SnackBar(
+        content: Center(child: Text('Coffre fort créé')),
+        backgroundColor: Color(0xFFB8860B),
+        duration: Duration(seconds: 1),
+      ),
     );
   }
 
@@ -132,7 +143,10 @@ class _NewVaultPageState extends State<NewVaultPage> {
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('1 • Message à cacher', style: Theme.of(context).textTheme.titleLarge),
+            Text(
+              '1 • Message à cacher',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
             const SizedBox(height: 12),
             TextField(
               controller: _messageController,
@@ -148,15 +162,18 @@ class _NewVaultPageState extends State<NewVaultPage> {
                   child: ElevatedButton(
                     onPressed: () {
                       if (_messageController.text.trim().isEmpty) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Le message ne peut pas être vide'), backgroundColor: Color(0xFFB8860B),
-                                duration: Duration(seconds: 1),),
-                            );
-                            return;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Le message ne peut pas être vide'),
+                            backgroundColor: Color(0xFFB8860B),
+                            duration: Duration(seconds: 1),
+                          ),
+                        );
+                        return;
                       }
-                            FocusScope.of(context).unfocus();
-                            _nextStep();
-                          },
+                      FocusScope.of(context).unfocus();
+                      _nextStep();
+                    },
                     child: const Text('Valider'),
                   ),
                 ),
@@ -165,8 +182,12 @@ class _NewVaultPageState extends State<NewVaultPage> {
           ],
         );
       case 1: // deadline
-        final dateStr = _pickedDate == null ? 'Aucune date choisie' : DateFormat.yMMMd().format(_pickedDate!);
-        final timeStr = _pickedTime == null ? '—:—' : _pickedTime!.format(context);
+        final dateStr = _pickedDate == null
+            ? 'Aucune date choisie'
+            : DateFormat.yMMMd().format(_pickedDate!);
+        final timeStr = _pickedTime == null
+            ? '—:—'
+            : _pickedTime!.format(context);
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -230,8 +251,11 @@ class _NewVaultPageState extends State<NewVaultPage> {
                   const SizedBox(width: 8),
                   DropdownButton<String>(
                     value: _relativeUnit,
-                    items: _units.map((u) => DropdownMenuItem(value: u, child: Text(u))).toList(),
-                    onChanged: (v) => setState(() => _relativeUnit = v ?? _relativeUnit),
+                    items: _units
+                        .map((u) => DropdownMenuItem(value: u, child: Text(u)))
+                        .toList(),
+                    onChanged: (v) =>
+                        setState(() => _relativeUnit = v ?? _relativeUnit),
                   ),
                 ],
               ),
@@ -241,8 +265,12 @@ class _NewVaultPageState extends State<NewVaultPage> {
               children: [
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: (_usePreciseDate && (_pickedDate == null || _pickedTime == null)) ||
-                            (!_usePreciseDate && (int.tryParse(_relativeValueController.text) == null))
+                    onPressed:
+                        (_usePreciseDate &&
+                                (_pickedDate == null || _pickedTime == null)) ||
+                            (!_usePreciseDate &&
+                                (int.tryParse(_relativeValueController.text) ==
+                                    null))
                         ? null
                         : _nextStep,
                     child: const Text('Valider'),
@@ -262,7 +290,10 @@ class _NewVaultPageState extends State<NewVaultPage> {
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('3 • Mot de passe de déverrouillage', style: Theme.of(context).textTheme.titleLarge),
+            Text(
+              '3 • Mot de passe de déverrouillage',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
             const SizedBox(height: 12),
             TextField(
               controller: _passwordController,
@@ -270,7 +301,9 @@ class _NewVaultPageState extends State<NewVaultPage> {
               decoration: InputDecoration(
                 hintText: 'Mot de passe (gardez-le précieusement)',
                 suffixIcon: IconButton(
-                  icon: Icon(_obscure ? Icons.visibility : Icons.visibility_off),
+                  icon: Icon(
+                    _obscure ? Icons.visibility : Icons.visibility_off,
+                  ),
                   onPressed: () => setState(() => _obscure = !_obscure),
                 ),
               ),
@@ -278,7 +311,10 @@ class _NewVaultPageState extends State<NewVaultPage> {
             const SizedBox(height: 8),
             Row(
               children: [
-                Checkbox(value: _passwordNoted, onChanged: (v) => setState(() => _passwordNoted = v ?? false)),
+                Checkbox(
+                  value: _passwordNoted,
+                  onChanged: (v) => setState(() => _passwordNoted = v ?? false),
+                ),
                 const Expanded(
                   child: Text(
                     'J’ai noté le mot de passe. Il ne sera plus accessible après validation.',
@@ -292,7 +328,10 @@ class _NewVaultPageState extends State<NewVaultPage> {
               children: [
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: (_passwordController.text.isEmpty || !_passwordNoted) ? null : _nextStep,
+                    onPressed:
+                        (_passwordController.text.isEmpty || !_passwordNoted)
+                        ? null
+                        : _nextStep,
                     child: const Text('Valider'),
                   ),
                 ),
@@ -308,7 +347,9 @@ class _NewVaultPageState extends State<NewVaultPage> {
         );
       case 3: // confirmation & create
         final computed = _computeDeadline();
-        final dlStr = computed == null ? '—' : DateFormat.yMd().add_jm().format(computed);
+        final dlStr = computed == null
+            ? '—'
+            : DateFormat.yMd().add_jm().format(computed);
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -339,18 +380,26 @@ class _NewVaultPageState extends State<NewVaultPage> {
                         barrierDismissible: true,
                         builder: (ctx) => AlertDialog(
                           title: Text("Confirmation"),
-                          content: Text("Si vous oubliez votre mot de passe et tentez de déverrouiller le coffre, le message affiché sera erroné et le message originel définitevement perdu. Êtes-vous sûr de vouloir continuer ?"),
+                          content: Text(
+                            "Si vous oubliez votre mot de passe et tentez de déverrouiller le coffre, le message affiché sera erroné et le message originel définitevement perdu. Êtes-vous sûr de vouloir continuer ?",
+                          ),
                           actions: [
-                            TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: Text("Retour")),
-                            ElevatedButton(onPressed: (){
-                              Navigator.of(ctx).pop(true);
-                              _createVault();
-                      }, child: Text("Confirmer")),
+                            TextButton(
+                              onPressed: () => Navigator.of(ctx).pop(false),
+                              child: Text("Retour"),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(ctx).pop(true);
+                                _createVault();
+                              },
+                              child: Text("Confirmer"),
+                            ),
                           ],
                         ),
                       );
                     },
-    child: const Text('Créer le coffre'),
+                    child: const Text('Créer le coffre'),
                   ),
             const SizedBox(height: 8),
             TextButton.icon(
@@ -368,9 +417,7 @@ class _NewVaultPageState extends State<NewVaultPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Nouveau coffre-fort'),
-      ),
+      appBar: AppBar(title: const Text('Nouveau coffre-fort')),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
@@ -378,7 +425,9 @@ class _NewVaultPageState extends State<NewVaultPage> {
             constraints: const BoxConstraints(maxWidth: 720),
             child: Card(
               color: const Color(0xFF0F0F12),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
               elevation: 8,
               child: Padding(
                 padding: const EdgeInsets.all(18),

@@ -45,10 +45,7 @@ class MyApp extends StatelessWidget {
             // contenu de l'application : s'assurer que le child n'ajoute pas une couleur de fond opaque
             if (child != null)
               Positioned.fill(
-                child: Container(
-                  color: Colors.transparent,
-                  child: child,
-                ),
+                child: Container(color: Colors.transparent, child: child),
               ),
           ],
         );
@@ -58,7 +55,7 @@ class MyApp extends StatelessWidget {
         '/signin': (context) => const SignInPage(),
         '/signup': (context) => const SignUpPage(),
         '/home': (context) => const HomePage(),
-        '/new_vault' : (context) => const NewVaultPage(),
+        '/new_vault': (context) => const NewVaultPage(),
         '/locked_vault': (context) => const LockedVaultPage(),
         '/unlocked_vault': (context) => UnlockedVaultPage(),
         '/password_missing': (context) => const PasswordMissingVaultPage(),

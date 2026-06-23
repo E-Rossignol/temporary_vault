@@ -14,14 +14,19 @@ class DatabaseHelper {
 
   Future<Data> getCurrentUserData(String mail) async {
     try {
-      final querySnapshot = await userDataCollection.where('user', isEqualTo: mail).get();
-      final query =  querySnapshot.docs.map((doc) {
+      final querySnapshot = await userDataCollection
+          .where('user', isEqualTo: mail)
+          .get();
+      final query = querySnapshot.docs.map((doc) {
         final data = doc.data();
         final keys = data.keys.toList()..sort();
         final values = keys.map((k) => '$k: ${data[k]}').join(' • ');
         return '${doc.id}${values.isNotEmpty ? ' • $values' : ''}';
       }).toList();
-      List<String> list = query[0].split(RegExp(r'\s*•\s*')).map((p) => p.trim()).toList();
+      List<String> list = query[0]
+          .split(RegExp(r'\s*•\s*'))
+          .map((p) => p.trim())
+          .toList();
       Data dt = Data(
         mail: list[4].split(": ")[1],
         deadline: fromIntToDateTime(int.parse(list[1].split(': ')[1])),
@@ -32,7 +37,12 @@ class DatabaseHelper {
     } catch (e) {
       // log et renvoie une liste vide en cas d'erreur
       // print/debugging léger pour aide au dev
-      return Data(mail: "", deadline: DateTime.now(), message: '', locked: false);
+      return Data(
+        mail: "",
+        deadline: DateTime.now(),
+        message: '',
+        locked: false,
+      );
     }
   }
 
@@ -44,7 +54,11 @@ class DatabaseHelper {
     try {
       final Map<String, dynamic> data = {};
       data['deadline'] = dt.deadline.millisecondsSinceEpoch;
-      String encryptedMessage = Helper.globalEncryption(dt.message, dt.mail, pwd);
+      String encryptedMessage = Helper.globalEncryption(
+        dt.message,
+        dt.mail,
+        pwd,
+      );
       data['message'] = encryptedMessage;
       data['user'] = dt.mail;
       data['locked'] = true;
@@ -55,14 +69,16 @@ class DatabaseHelper {
     }
   }
 
-  Future<bool> hasVault(String mail) async{
+  Future<bool> hasVault(String mail) async {
     final data = await getCurrentUserData(mail);
     return data.mail != "";
   }
 
-  Future<void> unlockUser(String mail) async{
+  Future<void> unlockUser(String mail) async {
     try {
-      final querySnapshot = await userDataCollection.where('user', isEqualTo: mail).get();
+      final querySnapshot = await userDataCollection
+          .where('user', isEqualTo: mail)
+          .get();
       if (querySnapshot.docs.isNotEmpty) {
         final docId = querySnapshot.docs[0].id;
         await userDataCollection.doc(docId).update({'locked': false});
@@ -72,7 +88,7 @@ class DatabaseHelper {
     }
   }
 
-  Future<bool> isDeadlinePassed(String mail) async{
+  Future<bool> isDeadlinePassed(String mail) async {
     final data = await getCurrentUserData(mail);
     DateTime deadline = data.deadline;
     DateTime now = DateTime.now();

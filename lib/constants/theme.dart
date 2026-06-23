@@ -12,10 +12,9 @@ class AppTheme {
       scaffoldBackgroundColor: Colors.transparent,
       // s'assurer que les surfaces par défaut n'obstruent pas l'arrière-plan
       canvasColor: Colors.transparent,
-      textTheme: GoogleFonts.montserratTextTheme(base.textTheme).apply(
-        bodyColor: Colors.white,
-        displayColor: Colors.white,
-      ),
+      textTheme: GoogleFonts.montserratTextTheme(
+        base.textTheme,
+      ).apply(bodyColor: Colors.white, displayColor: Colors.white),
       colorScheme: ColorScheme.dark(
         primary: darkGold,
         secondary: darkGold.withOpacity(0.9),
@@ -31,7 +30,9 @@ class AppTheme {
         style: ElevatedButton.styleFrom(
           backgroundColor: darkGold,
           foregroundColor: Colors.black,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
           textStyle: const TextStyle(fontWeight: FontWeight.w600),
         ),
@@ -39,8 +40,14 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: const Color(0xFF131316),
-        contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 14,
+          horizontal: 16,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
         hintStyle: TextStyle(color: Colors.white.withOpacity(0.6)),
         labelStyle: TextStyle(color: Colors.white.withOpacity(0.8)),
       ),

@@ -32,15 +32,21 @@ class _SignUpPageState extends State<SignUpPage> {
       if (!mounted) return;
       Navigator.pushReplacementNamed(context, '/home');
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Center(
-          child: Text('Connecté'),
-        ), backgroundColor: Color(0xFFB8860B),
-        duration: Duration(seconds: 1),),
+        const SnackBar(
+          content: Center(child: Text('Connecté')),
+          backgroundColor: Color(0xFFB8860B),
+          duration: Duration(seconds: 1),
+        ),
       );
     } on FirebaseAuthException catch (e) {
       final msg = e.message ?? 'Erreur lors de l\'inscription';
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg), backgroundColor: Color(0xFFB8860B),
-        duration: Duration(seconds: 1)));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(msg),
+          backgroundColor: Color(0xFFB8860B),
+          duration: Duration(seconds: 1),
+        ),
+      );
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -85,7 +91,11 @@ class _SignUpPageState extends State<SignUpPage> {
                     color: const Color(0xFF0E0E10),
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
-                      BoxShadow(color: Colors.black.withOpacity(0.6), blurRadius: 18, offset: const Offset(0, 8)),
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.6),
+                        blurRadius: 18,
+                        offset: const Offset(0, 8),
+                      ),
                     ],
                     border: Border.all(color: darkGold.withOpacity(0.08)),
                   ),
@@ -96,7 +106,10 @@ class _SignUpPageState extends State<SignUpPage> {
                         const SizedBox(height: 6),
                         Icon(Icons.person_add, size: 56, color: darkGold),
                         const SizedBox(height: 12),
-                        Text('Créer un compte', style: Theme.of(context).textTheme.titleLarge),
+                        Text(
+                          'Créer un compte',
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
                         const SizedBox(height: 18),
                         TextFormField(
                           controller: _emailCtrl,
@@ -105,7 +118,8 @@ class _SignUpPageState extends State<SignUpPage> {
                             prefixIcon: Icon(Icons.email_outlined),
                           ),
                           keyboardType: TextInputType.emailAddress,
-                          validator: (v) => (v == null || v.isEmpty) ? 'Requis' : null,
+                          validator: (v) =>
+                              (v == null || v.isEmpty) ? 'Requis' : null,
                         ),
                         const SizedBox(height: 12),
                         TextFormField(
@@ -115,7 +129,9 @@ class _SignUpPageState extends State<SignUpPage> {
                             prefixIcon: Icon(Icons.vpn_key_outlined),
                           ),
                           obscureText: true,
-                          validator: (v) => (v == null || v.length < 6) ? 'Min 6 caractères' : null,
+                          validator: (v) => (v == null || v.length < 6)
+                              ? 'Min 6 caractères'
+                              : null,
                         ),
                         const SizedBox(height: 20),
                         _loading
@@ -129,13 +145,24 @@ class _SignUpPageState extends State<SignUpPage> {
                               ),
                         const SizedBox(height: 8),
                         TextButton(
-                          onPressed: () => Navigator.pushReplacementNamed(context, '/signin'),
-                          child: Text('Déjà inscrit ? Se connecter', style: TextStyle(color: Colors.white.withOpacity(0.72))),
+                          onPressed: () => Navigator.pushReplacementNamed(
+                            context,
+                            '/signin',
+                          ),
+                          child: Text(
+                            'Déjà inscrit ? Se connecter',
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.72),
+                            ),
+                          ),
                         ),
                         const SizedBox(height: 6),
                         Text(
                           'Security-first • Vos identifiants sont protégés',
-                          style: TextStyle(color: Colors.white.withOpacity(0.45), fontSize: 12),
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.45),
+                            fontSize: 12,
+                          ),
                         ),
                       ],
                     ),

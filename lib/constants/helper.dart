@@ -3,10 +3,14 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'package:pointycastle/export.dart';
 
-
 class Helper {
   // ----- Helpers -----
-  static Uint8List _deriveKey(String password, Uint8List salt, {int iterations = 10000, int keyLength = 32}) {
+  static Uint8List _deriveKey(
+    String password,
+    Uint8List salt, {
+    int iterations = 10000,
+    int keyLength = 32,
+  }) {
     final pbkdf2 = PBKDF2KeyDerivator(HMac(SHA256Digest(), 64));
     final params = Pbkdf2Parameters(salt, iterations, keyLength);
     pbkdf2.init(params);
@@ -29,9 +33,19 @@ class Helper {
     return secure;
   }
 
-  static Uint8List _aesGcmProcess(bool forEncryption, Uint8List key, Uint8List iv, Uint8List input) {
+  static Uint8List _aesGcmProcess(
+    bool forEncryption,
+    Uint8List key,
+    Uint8List iv,
+    Uint8List input,
+  ) {
     final cipher = GCMBlockCipher(AESEngine());
-    final params = AEADParameters(KeyParameter(key), 128, iv, Uint8List(0)); // 128-bit auth tag
+    final params = AEADParameters(
+      KeyParameter(key),
+      128,
+      iv,
+      Uint8List(0),
+    ); // 128-bit auth tag
     cipher.init(forEncryption, params);
 
     final out = Uint8List(cipher.getOutputSize(input.length));
@@ -40,20 +54,28 @@ class Helper {
     return out.sublist(0, len);
   }
 
-  static String globalEncryption(String message, String userName, String pwd){
+  static String globalEncryption(String message, String userName, String pwd) {
     String encryptedMessage = encryptMessage(message, pwd);
-    String encryptedUserName = encryptMessage(userName, pwd).substring(0,10);
+    String encryptedUserName = encryptMessage(userName, pwd).substring(0, 10);
     return encryptedMessage + encryptedUserName;
   }
 
-  static String? globalDecryption(String encryptedData, String userName, String pwd){
-    String encryptedMessage = encryptedData.substring(0, encryptedData.length - 10);
-    String encryptedUserName = encryptedData.substring(encryptedData.length - 10);
-    String tmp = encryptMessage(userName, pwd).substring(0,10);
-    if (tmp == encryptedUserName){
-     return decryptMessage(encryptedMessage, pwd);
-    }
-    else {
+  static String? globalDecryption(
+    String encryptedData,
+    String userName,
+    String pwd,
+  ) {
+    String encryptedMessage = encryptedData.substring(
+      0,
+      encryptedData.length - 10,
+    );
+    String encryptedUserName = encryptedData.substring(
+      encryptedData.length - 10,
+    );
+    String tmp = encryptMessage(userName, pwd).substring(0, 10);
+    if (tmp == encryptedUserName) {
+      return decryptMessage(encryptedMessage, pwd);
+    } else {
       return null;
     }
   }
@@ -69,7 +91,11 @@ class Helper {
     final out = Uint8List(salt.length + iv.length + cipherText.length)
       ..setRange(0, salt.length, salt)
       ..setRange(salt.length, salt.length + iv.length, iv)
-      ..setRange(salt.length + iv.length, salt.length + iv.length + cipherText.length, cipherText);
+      ..setRange(
+        salt.length + iv.length,
+        salt.length + iv.length + cipherText.length,
+        cipherText,
+      );
     String res = base64Encode(out);
     return res;
   }
@@ -78,7 +104,8 @@ class Helper {
   static String decryptMessage(String encryptedMessage, String pwd) {
     try {
       final data = base64Decode(encryptedMessage);
-      if (data.length < 16 + 12 + 16) return ''; // trop court pour salt+iv+tag au minimum
+      if (data.length < 16 + 12 + 16)
+        return ''; // trop court pour salt+iv+tag au minimum
 
       final salt = data.sublist(0, 16);
       final iv = data.sublist(16, 16 + 12);

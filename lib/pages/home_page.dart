@@ -17,8 +17,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int userState = 0; // STATES: 0 = locked, 1 = ready to be unlocked, 2 = unlocked
-  Data dt = Data(mail: "", deadline: DateTime.now(), message: '', locked: false);
+  int userState =
+      0; // STATES: 0 = locked, 1 = ready to be unlocked, 2 = unlocked
+  Data dt = Data(
+    mail: "",
+    deadline: DateTime.now(),
+    message: '',
+    locked: false,
+  );
 
   // stocker le Future d'initialisation pour éviter de le recréer à chaque build
   late Future<void> _initFuture;
@@ -41,7 +47,10 @@ class _HomePageState extends State<HomePage> {
     } catch (e) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erreur lors de la déconnexion : $e'), backgroundColor: AppTheme.darkGold),
+        SnackBar(
+          content: Text('Erreur lors de la déconnexion : $e'),
+          backgroundColor: AppTheme.darkGold,
+        ),
       );
     }
   }
@@ -54,8 +63,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> initUserState() async {
-    dt = await DatabaseHelper.instance.getCurrentUserData(FirebaseAuth.instance.currentUser?.email ?? '');
-    bool hasVault = await DatabaseHelper.instance.hasVault(FirebaseAuth.instance.currentUser?.email ?? '');
+    dt = await DatabaseHelper.instance.getCurrentUserData(
+      FirebaseAuth.instance.currentUser?.email ?? '',
+    );
+    bool hasVault = await DatabaseHelper.instance.hasVault(
+      FirebaseAuth.instance.currentUser?.email ?? '',
+    );
     setState(() {
       if (!hasVault) {
         userState = -1; // pas de vault, considéré comme déverrouillé
@@ -72,12 +85,17 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget screen() {
-    switch (userState){
-      case -1: return NewVaultPage();
-      case 0: return LockedVaultPage(data: dt);
-      case 1: return PasswordMissingVaultPage(data: dt);
-      case 2: return UnlockedVaultPage(data: dt);
-      default: return const Center(child: Text('Unknown state'));
+    switch (userState) {
+      case -1:
+        return NewVaultPage();
+      case 0:
+        return LockedVaultPage(data: dt);
+      case 1:
+        return PasswordMissingVaultPage(data: dt);
+      case 2:
+        return UnlockedVaultPage(data: dt);
+      default:
+        return const Center(child: Text('Unknown state'));
     }
   }
 
@@ -95,13 +113,16 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       // utiliser le Future stocké pour éviter la recréation à chaque build
-      body: FutureBuilder<void>(future: _initFuture, builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else {
-          return screen();
-        }
-      }),
+      body: FutureBuilder<void>(
+        future: _initFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else {
+            return screen();
+          }
+        },
+      ),
     );
   }
 }

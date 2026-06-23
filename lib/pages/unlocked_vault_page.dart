@@ -10,7 +10,6 @@ class UnlockedVaultPage extends StatefulWidget {
 }
 
 class _UnlockedVaultPageState extends State<UnlockedVaultPage> {
-
   String message = "";
   @override
   void initState() {
@@ -19,19 +18,21 @@ class _UnlockedVaultPageState extends State<UnlockedVaultPage> {
   }
 
   Future<void> initMessage() async {
-      final prefs = await SharedPreferences.getInstance();
-      setState(() {
-        message = prefs.getString('clear_message') ?? '';
-      });
-      if (message == ''){
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Center(
-            child: Text('ERREUR'),
-          ), backgroundColor: Colors.redAccent,
-            duration: Duration(seconds: 2),),
-        );
-      }
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      message = prefs.getString('clear_message') ?? '';
+    });
+    if (message == '') {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Center(child: Text('ERREUR')),
+          backgroundColor: Colors.redAccent,
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
   }
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -40,11 +41,17 @@ class _UnlockedVaultPageState extends State<UnlockedVaultPage> {
         child: Column(
           children: [
             SizedBox(height: 100),
-            Icon(Icons.lock_open, size: 80, color: Colors.greenAccent,),
-            Text("Unlocked Vault Page", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
-            SizedBox(height: 20,),
-            Text("Clear message: ", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),),
-            Text(message, style: TextStyle(fontSize: 16),),
+            Icon(Icons.lock_open, size: 80, color: Colors.greenAccent),
+            Text(
+              "Unlocked Vault Page",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 20),
+            Text(
+              "Clear message: ",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            ),
+            Text(message, style: TextStyle(fontSize: 16)),
           ],
         ),
       ),
