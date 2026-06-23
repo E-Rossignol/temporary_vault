@@ -1,0 +1,58 @@
+name: Flutter CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  app-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Display Flutter version
+        run: flutter --version
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Verify formatting
+        run: dart format --set-exit-if-changed .
+
+      - name: Static analysis
+        run: flutter analyze --no-fatal-infos --no-fatal-warnings
+
+
+  app-release:
+    needs: app-test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Display Flutter version
+        run: flutter --version
+
+      - name: Install dependencies
+        run: flutter pub get
+      - name: Build Android APK
+        run: flutter build apk --release
+
+      - name: Update Deliverables
+        run: |
+          ls
+          cd build/app/outputs/flutter-apk
+          cp app-release.apk ../../../../deliverables/app-release.apk
