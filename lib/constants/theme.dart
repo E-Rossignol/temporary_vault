@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   static const Color darkBackground = Color(0xFF0C0C0F);
@@ -12,9 +11,6 @@ class AppTheme {
       scaffoldBackgroundColor: Colors.transparent,
       // s'assurer que les surfaces par défaut n'obstruent pas l'arrière-plan
       canvasColor: Colors.transparent,
-      textTheme: GoogleFonts.montserratTextTheme(
-        base.textTheme,
-      ).apply(bodyColor: Colors.white, displayColor: Colors.white),
       colorScheme: ColorScheme.dark(
         primary: darkGold,
         secondary: darkGold.withOpacity(0.9),
